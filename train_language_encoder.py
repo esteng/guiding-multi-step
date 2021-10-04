@@ -418,7 +418,8 @@ class FlatLanguageTrainer(LanguageTrainer):
                  resolution: int = 64, 
                  depth: int = 4,
                  best_epoch: int = -1,
-                 do_regression: bool = False): 
+                 do_regression: bool = False,
+                 save_all_eval: bool = False): 
         super(FlatLanguageTrainer, self).__init__(train_data=train_data,
                                                   val_data=val_data,
                                                   encoder=encoder,
@@ -434,6 +435,7 @@ class FlatLanguageTrainer(LanguageTrainer):
                                                   depth=depth, 
                                                   best_epoch=best_epoch,
                                                   do_regression = do_regression)
+        self.save_all_eval = save_all_eval 
 
     def train_and_validate_one_epoch(self, epoch): 
         print(f"Training epoch {epoch}...") 
@@ -487,15 +489,16 @@ class FlatLanguageTrainer(LanguageTrainer):
             json.dump(bin_dict, f1) 
         if len(all_res_dicts) == 0:
             return None
+        pre_mean_dict = {k: [] for k in all_res_dicts[0].keys()}
         mean_dict = {k: [] for k in all_res_dicts[0].keys()}
 
         #print(all_res_dicts) 
         for res_d in all_res_dicts:
             for k, v in res_d.items():
                 if type(v) in [float, int, np.float64, np.int]:
-                    mean_dict[k].append(v)
+                    pre_mean_dict[k].append(v)
 
-        for k, v in mean_dict.items():
+        for k, v in pre_mean_dict.items():
             if k in ["next_f1", "prev_f1", "block_acc", "next_r", "prev_r", "next_p", "prev_p"]: 
                 v = 100 * np.mean(v) 
             else:
@@ -505,8 +508,12 @@ class FlatLanguageTrainer(LanguageTrainer):
         if out_path is None: 
             out_path = "val_metrics.json"
 
+        if self.save_all_eval:
+            to_dump = pre_mean_dict
+        else:
+            to_dump = mean_dict
         with open(self.checkpoint_dir.joinpath(out_path), "w") as f1:
-            json.dump(mean_dict, f1) 
+            json.dump(to_dump, f1) 
 
         return mean_dict 
 

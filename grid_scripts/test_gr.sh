@@ -18,5 +18,5 @@ python -u train_transformer_gr_data.py  \
     --cfg ${CHECKPOINT_DIR}/config.yaml \
     --test \
     --checkpoint-dir ${CHECKPOINT_DIR} \
-    --cuda -1 | tee ${CHECKPOINT_DIR}/stdout.log
+    --cuda ${CUDA_VISIBLE_DEVICES} | tee ${CHECKPOINT_DIR}/stdout.log
 

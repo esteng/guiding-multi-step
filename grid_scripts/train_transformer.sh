@@ -27,4 +27,5 @@ git reflog | head -n 1 >> ${CHECKPOINT_DIR}/stdout.log
 
 python -u train_transformer.py \
         --cfg ${CONFIG} \
+        --cuda ${CUDA_VISIBLE_DEVICES} \
         --checkpoint-dir ${CHECKPOINT_DIR} | tee ${CHECKPOINT_DIR}/stdout.log

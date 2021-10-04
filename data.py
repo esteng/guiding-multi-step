@@ -589,7 +589,8 @@ class GoodRobotDatasetReader:
                 resolution: int = 64,
                 is_bert: bool = True,
                 data_subset: float = None, 
-                overfit: bool = False):
+                overfit: bool = False,
+                prep_code: str = None):
         # TODO(elias) add depth heightmaps 
         self.batch_size = batch_size
         self.is_bert = is_bert 
@@ -631,6 +632,22 @@ class GoodRobotDatasetReader:
             # train on everything except (<color_a>, <color_b>) combos in either direction
             allowed_data = [x for x in self.all_data if not(x.source_code in color_pair and x.target_code in color_pair)]
             held_out_data = [x for x in self.all_data if x.source_code in color_pair and x.target_code in color_pair]
+            train_data = allowed_data
+            held_out_len = len(held_out_data)
+            dev_len = int(held_out_len/3)
+            dev_data = held_out_data[0:dev_len]
+            test_data = held_out_data[dev_len: ]
+        elif split_type == "leave-out-prep":
+            # filter all data so that only rbgy are allowed 
+            allowed_four = ["red", "blue", "green", "yellow"]
+            self.all_data = [x for x in self.all_data if x.source_code in allowed_four and x.target_code in allowed_four]
+            # train on everything except (<color_a>, prep, <color_b>) combos in either direction
+            if prep_code == "next_to":
+                is_row = True
+            else:
+                is_row = False
+            allowed_data = [x for x in self.all_data if not(x.source_code in color_pair and x.target_code in color_pair) and x.is_row != is_row]
+            held_out_data = [x for x in self.all_data if x.source_code in color_pair and x.target_code in color_pair and x.is_row == is_row]
             train_data = allowed_data
             held_out_len = len(held_out_data)
             dev_len = int(held_out_len/3)

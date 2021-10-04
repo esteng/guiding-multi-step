@@ -152,6 +152,8 @@ class GoodRobotTransformerTrainer(TransformerTrainer):
             return (mean_next_acc + mean_prev_acc)/2, -1.0
         elif self.score_type == "tele_score":
             return mean_tele_score, -1
+        elif self.score_type == "block_acc":
+            return mean_block_acc, -1
         else:
             raise AssertionError(f"invalid score type {self.score_type}")
 
@@ -461,10 +463,13 @@ class GoodRobotTransformerTrainer(TransformerTrainer):
 
 def main(args):
     device = "cpu"
-    if args.cuda is not None:
-        free_gpu_id = get_free_gpu()
-        if free_gpu_id > -1:
-            device = f"cuda:{free_gpu_id}"
+    if args.cuda is not None and args.cuda > -1:
+        # set by SLURM
+        #device = f"cuda:{args.cuda}"
+        device = int(args.cuda) 
+        #free_gpu_id = get_free_gpu()
+        #if free_gpu_id > -1:
+        #    device = f"cuda:{free_gpu_id}"
             #device = "cuda:0"
 
     device = torch.device(device)  
@@ -494,7 +499,8 @@ def main(args):
                                             resolution = args.resolution,
                                             is_bert = "bert" in args.embedder,
                                             data_subset = args.data_subset, 
-                                            overfit=args.overfit) 
+                                            overfit=args.overfit,
+                                            prep_code=args.prep_code) 
 
     checkpoint_dir = pathlib.Path(args.checkpoint_dir)
     if not args.test:
@@ -681,7 +687,7 @@ if __name__ == "__main__":
     parser.add_argument("--next-weight", type=float, default=1)
     parser.add_argument("--prev-weight", type=float, default=1) 
     parser.add_argument("--channels", type=int, default=6)
-    parser.add_argument("--split-type", type=str, choices= ["random", "leave-out-color",
+    parser.add_argument("--split-type", type=str, choices= ["random", "leave-out-color", "leave-out-prep",
                                                              "train-stack-test-row",
                                                              "train-row-test-stack"],
                                                              default="random")
@@ -694,6 +700,7 @@ if __name__ == "__main__":
     parser.add_argument("--augment-language", action="store_true")
     parser.add_argument("--overfit", action = "store_true")
     parser.add_argument("--color-pair", default=None, type=str) 
+    parser.add_argument("--prep-code", type=str, default=None, help="code of the preposition to hold out, if any", choices=["next_to", "on", None])
     parser.add_argument("--noise-num-samples", default=2, type=int)
     parser.add_argument("--data-subset", default = -1, type=float, help = "subset of the data to train on (percentage)")
     # language embedder 

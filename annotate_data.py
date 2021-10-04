@@ -425,7 +425,8 @@ class Pair:
 
         #stack_template = "stack the {source_location} {source_color} block {relation} the {target_location} {target_color} block"
         
-        stack_template = "stack the {source_color} block {relation} the {target_color} block"
+        #stack_template = "stack the {source_color} block {relation} the {target_color} block"
+        stack_template = "move the {source_color} block {relation} the {target_color} block"
         row_template = "move the {source_color} block {relation} the {target_color} block"
 
         # is stacking task

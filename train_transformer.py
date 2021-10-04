@@ -62,7 +62,8 @@ class TransformerTrainer(FlatLanguageTrainer):
                  prev_weight: float = 1.0,
                  do_regression: bool = False,
                  do_reconstruction: bool = False,
-                 n_epochs_pre_valid: int = 0):
+                 n_epochs_pre_valid: int = 0,
+                 save_all_eval: bool = False):
         super(TransformerTrainer, self).__init__(train_data=train_data,
                                                  val_data=val_data,
                                                  encoder=encoder,
@@ -77,7 +78,8 @@ class TransformerTrainer(FlatLanguageTrainer):
                                                  resolution=resolution, 
                                                  depth=depth, 
                                                  best_epoch=best_epoch,
-                                                 do_regression=do_regression)
+                                                 do_regression=do_regression,
+                                                 save_all_eval=save_all_eval)
 
         weight = torch.tensor([zero_weight, 1.0-zero_weight]).to(device) 
         total_steps = num_epochs * len(train_data) 
@@ -817,7 +819,8 @@ def main(args):
                                    generate_after_n = args.generate_after_n,
                                    score_type=args.score_type,
                                    do_regression = args.do_regression,
-                                   do_reconstruction = args.do_reconstruction)
+                                   do_reconstruction = args.do_reconstruction,
+                                   save_all_eval=args.save_all_eval)
         print(f"evaluating") 
         eval_trainer.evaluate(out_path)
 
@@ -890,6 +893,7 @@ if __name__ == "__main__":
     parser.add_argument("--do-regression", action="store_true", help="add a regression task to learning") 
     parser.add_argument("--do-reconstruction", action="store_true", help="add a reconstruction task to learning") 
     parser.add_argument("--out-path", type=str, default=None, help = "when decoding, path to output file")
+    parser.add_argument("--save-all-eval", action="store_true", help="set to true to save all predictions at eval time rather than their means. For significance testing.")
 
     args = parser.parse_args() 
     if args.do_one_hot:
