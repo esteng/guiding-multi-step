@@ -333,7 +333,7 @@ class UNetWithBlocks(UNetWithLanguage):
 
         self.compute_block_dist = True 
         self.resolution = resolution
-        # TODO (elias): automatically infer this size when the num_layers is different 
+        # (elias): automatically infer this size when the num_layers is different 
         width = int(self.resolution**(1/(num_layers-1))) 
         self.block_prediction_module = MLP(input_dim  = 2*width*width*hc_large,
                                            hidden_dim = 2*hc_large,

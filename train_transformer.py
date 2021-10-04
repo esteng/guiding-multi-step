@@ -676,7 +676,6 @@ def main(args):
     if args.top_only:
         depth = 1
     else:
-        # TODO (elias): confirm this number 
         depth = 7
 
     encoder_cls = ResidualTransformerEncoder if args.encoder_type == "ResidualTransformerEncoder" else TransformerEncoder

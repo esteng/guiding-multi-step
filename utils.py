@@ -425,12 +425,11 @@ def common_sense_language_model_mask(language_output, push_predictions=None, gra
     """
 
     # language masks are currently for grasp and place only. The push predictions will not be operated upon.
-    # TODO (elias) remove this after solving other problems, makes push illegal
+    # (elias)  makes push illegal
     #push_predictions = 1 - push_predictions * np.inf
     push_predictions = np.ones_like(push_predictions) * -np.inf
 
     #push_predictions = process_prediction_language_masking(language_output['prev_position'], push_predictions, color_heightmap=color_heightmap, threshold = 0.6)
-    # TODO (elias) tune these values
     from_transformer = True 
     if type(language_output) == tuple: 
         next_pos, prev_pos = language_output

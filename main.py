@@ -1176,7 +1176,6 @@ def main(args):
                     valid_depth_heightmap_place, color_heightmap_place, depth_heightmap_place, color_img_place, depth_img_place = get_and_save_images(robot, workspace_limits,
                             heightmap_resolution, logger, trainer, '2')
 
-                    # TODO(elias) confirm this doesn't break anything
                     # add for annotation process if we're not in the sim
                     try:
                         nonlocal_variables['language_metadata']['prev_color_heightmap'] = prev_color_heightmap
@@ -1422,7 +1421,7 @@ def main(args):
     if static_language_mask:
         if is_sim and not is_bisk:
             # define a dataset reader closure so that we can pass individual objects at a time
-            # TODO(elias) turn these into command-line args
+            # (elias) turn these into command-line args
             dataset_reader_fxn = lambda x: GoodRobotDatasetReader(path_or_obj=x,
                                                     split_type="none",
                                                     task_type="rows",
@@ -1481,13 +1480,7 @@ def main(args):
             # TODO(elias) what about unsuccessful grasp actions that move the block
             if is_sim and (prev_primitive_action == "place" or prev_primitive_action is None):
                 json_data = sim_object_state_to_json(robot)
-                # TODO(elias) add depthmap
-                #plt.imshow(color_heightmap)
-                #plt.show(block=True)
-                #plt.figure()
-                #plt.imshow(valid_depth_heightmap)
-                #plt.show(block=True)
-                print(nonlocal_variables['stack'].object_color_sequence, nonlocal_variables['stack'].object_color_index)
+                #print(nonlocal_variables['stack'].object_color_sequence, nonlocal_variables['stack'].object_color_index)
                 pair = Pair.from_main_idxs(color_heightmap,
                                            valid_depth_heightmap,
                                            json_data,
@@ -1496,8 +1489,6 @@ def main(args):
 
                 # batchify a single example
                 language_data_instance = dataset_reader_fxn(pair).data['train'][0]
-            # TODO(elias) add if statement for unsuccessful grasp, the command should stay the same
-            #if is
 
             # only set up the scene if working with Bisk (2018) data
             elif is_sim and is_bisk:
@@ -1579,7 +1570,6 @@ def main(args):
                         try:
                             trainer.model.load_state_dict(torch.load(snapshot_file))
                         except FileNotFoundError:
-                            # TODO(elias) make sure this is OK
                             pass
                 if place:
                     set_nonlocal_success_variables_false()

@@ -154,7 +154,6 @@ class UNetLanguageTrainer(FlatLanguageTrainer):
             pred_next_block_logits = next_outputs["pred_block_logits"] 
             true_next_block_idxs = inputs["block_to_move"]
             true_next_block_idxs = true_next_block_idxs.to(self.device).long().reshape(-1) 
-            # TODO (elias): for now just do as auxiliary task 
             next_pixel_loss = self.xent_loss_fxn(pred_next_image, true_next_image) 
             prev_pixel_loss = self.xent_loss_fxn(pred_prev_image, true_prev_image) 
             next_foreground_loss = self.fore_loss_fxn(pred_next_image, true_next_image) 
@@ -454,7 +453,6 @@ def main(args):
     if args.top_only:
         depth = 1
     else:
-        # TODO (elias): confirm this number 
         depth = 7
 
     if args.image_path is None:

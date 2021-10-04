@@ -44,9 +44,11 @@ class Trainer(object):
         self.flops = flops
         self.goal_condition_len = goal_condition_len
         self.common_sense = common_sense
-        #self.place_common_sense = self.common_sense and place_common_sense and not static_language_mask
-	# TODO (elias) clean this up 
-        self.place_common_sense = True
+        self.place_common_sense = self.common_sense and place_common_sense and not static_language_mask
+        # (elias): override for when langauge used 
+        if static_language_mask: 
+            self.place_common_sense = True
+
         self.common_sense_backprop = common_sense_backprop
         self.static_language_mask=static_language_mask
         self.show_heightmap = show_heightmap

@@ -62,7 +62,6 @@ class BaseTrajectory:
 
         self.include_depth = include_depth 
 
-        # TODO: try this 
         self.block_size = int((4 * self.resolution)/64) + 1
 
         self.line_id = line_id
@@ -234,7 +233,7 @@ class BaseTrajectory:
                 image_positions.append(image) 
 
         else:
-            # TODO (elias) change input so it shows the top-most element 
+            #(elias) change input so it shows the top-most element 
             depth, width = self.resolution, self.resolution
             for i, position_list in enumerate(positions): 
                 image = np.zeros(( width, depth, 1 + 1)) 
@@ -591,7 +590,6 @@ class GoodRobotDatasetReader:
                 data_subset: float = None, 
                 overfit: bool = False,
                 prep_code: str = None):
-        # TODO(elias) add depth heightmaps 
         self.batch_size = batch_size
         self.is_bert = is_bert 
         self.resolution = resolution 

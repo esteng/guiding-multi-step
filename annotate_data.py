@@ -148,7 +148,7 @@ class Pair:
 
     @classmethod
     def from_main_idxs(cls, prev_image, prev_heightmap, prev_json, stack_sequence, is_row = True):
-        # TODO(elias) infer which block to move from interpolation here
+        # (elias) infer which block to move from interpolation here
         prev_image = np.concatenate([prev_image, prev_heightmap], axis=-1)
         pair = cls(prev_image, None, None, None, is_row = is_row)
         json_data = Pair.read_json(prev_json)

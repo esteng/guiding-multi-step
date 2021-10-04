@@ -156,7 +156,6 @@ class LanguageTrainer:
         mean_acc = total_acc / total 
         mean_block_acc = total_block_acc / total
         print(f"Epoch {epoch} has pixel acc {mean_acc * 100}, block acc {mean_block_acc * 100}") 
-        # TODO (elias): change back to pixel acc after debugging 
         return mean_acc, mean_block_acc 
 
     def validate(self, batch_instance, epoch_num, batch_num, instance_num): 
@@ -341,7 +340,7 @@ class LanguageTrainer:
         if self.compute_block_dist:
             # loss per pixel 
             #pixel_loss = self.nll_loss_fxn(pred_image, true_image) 
-            # TODO (elias): for now just do as auxiliary task 
+            # (elias): for now just do as auxiliary task 
             pixel_loss = self.xent_loss_fxn(pred_image, true_image) 
             foreground_loss = self.fore_loss_fxn(pred_image, true_image) 
             # loss per block
@@ -468,7 +467,6 @@ class FlatLanguageTrainer(LanguageTrainer):
         mean_acc = total_acc / total 
         mean_block_acc = total_block_acc / total
         print(f"Epoch {epoch} has pixel acc {mean_acc * 100}, block acc {mean_block_acc * 100}") 
-        # TODO (elias): change back to pixel acc after debugging 
         return mean_acc, mean_block_acc 
 
     def evaluate(self, out_path = None):
