@@ -255,8 +255,8 @@ def main(args):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument("--train-path",         type=str,   default = "blocks_data/trainset_v2.json",   help="path to train data")
-    parser.add_argument("--val-path",           type=str,   default="blocks_data/devset.json",          help = "path to dev data")
+    parser.add_argument("--train-path",         type=str,   default = "blocks_data/bisk_data_original/trainset_v2.json",   help="path to train data")
+    parser.add_argument("--val-path",           type=str,   default="blocks_data/bisk_data_original/devset.json",          help = "path to dev data")
     parser.add_argument("--num-blocks",         type=int,   default=20)
     parser.add_argument("--simulator",          type=str,   default="CoppeliaSim",                      help="simulator software name")
     parser.add_argument("--blocks-path",        type=str,   default="objects/bisk_blocks",              help="trajectory values")

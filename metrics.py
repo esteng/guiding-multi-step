@@ -59,6 +59,13 @@ class F1Metric:
         gold_pixels = true_pos 
         pred_pixels = pred_pixels.unsqueeze(-1) 
 
+        if len(pred_pixels.shape) == 5:
+            bsz, w, h, __, __ = pred_pixels.shape
+        else:
+            bsz, w, h, __ = pred_pixels.shape
+        pred_pixels = pred_pixels.reshape(bsz, w, h)
+        gold_pixels = gold_pixels.reshape(bsz, w, h)
+
         if self.mask: 
             # where there is no block, automatically put down a 0 
             zero_mask = true_pos == 0
@@ -69,7 +76,6 @@ class F1Metric:
         gold_pixels = gold_pixels.detach().cpu().float() 
 
         total_pixels = sum(pred_pixels.shape) 
-
         true_pos = torch.sum(pred_pixels * gold_pixels).item() 
         true_neg = torch.sum((1-pred_pixels) * (1 - gold_pixels)).item() 
         false_pos = torch.sum(pred_pixels * (1 - gold_pixels)).item() 
@@ -289,25 +295,6 @@ class GoodRobotTransformerTeleportationMetric(TransformerTeleportationMetric):
         self.color_to_idx = {"red":1, "blue": 2, "green": 3, "yellow": 4, "brown": 5, "orange": 6, "gray": 7, "purple": 8, "cyan": 9, "pink": 10}
         self.idx_to_color = {v:k for k,v in self.color_to_idx.items()}
         self.block_ratio = 9/64
-
-    def compute_distance(self, pred_block_corner, prev_block_id, block_to_move, pair, place_location):
-        # execute the move on the previous state 
-        pred_next_image = self.execute_move(pred_block_corner, prev_block_id, pair.prev_state_image) 
-        # filter to be 1-0 
-        true_next_image_oh = true_next_image.clone() 
-
-        true_next_image_oh[true_next_image != block_to_move] = 0
-        true_next_image_oh[true_next_image == block_to_move] = 1
-        pred_next_image_oh[pred_next_image != block_to_move] = 0
-        pred_next_image_oh[pred_next_image == block_to_move] = 1
-        # get centers          
-        true_block_center = self.euclid.get_block_center(true_next_image_oh) 
-        pred_block_center = self.euclid.get_block_center(pred_next_image_oh) 
-       
-        distance_pix = self.euclid.get_euclidean_distance(pred_block_center, true_block_center) 
-        # convert to distance in block_lengths 
-        distance_normalized = distance_pix / self.block_size
-        return distance_normalized, pred_block_center, true_block_center
 
     def select_prev_block(self, pair, pred_prev_image):
         c, w, h = pred_prev_image.shape
