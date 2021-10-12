@@ -603,9 +603,10 @@ def main(args):
 
     device = "cpu"
     if args.cuda is not None:
-        free_gpu_id = get_free_gpu()
-        if free_gpu_id > -1:
-            device = f"cuda:{free_gpu_id}"
+        #free_gpu_id = get_free_gpu()
+        #if free_gpu_id > -1:
+        #device = f"cuda:{free_gpu_id}"
+        device = f"cuda:{args.cuda}"
             #device = "cuda:0"
 
     device = torch.device(device)  

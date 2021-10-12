@@ -40,6 +40,65 @@ class Pair:
         self.json_data = None
         self.is_row = is_row
 
+    def to_jsonline(self):
+        image_keys = ["next_image", "prev_image"]
+        numpy_keys = ["prev_location", "next_location", "prev_state_image", "next_state_image", "prev_image_for_inference", "next_image_for_inference"]
+        data = {k:v for k,v in self.__dict__.items() if k not in image_keys and k not in numpy_keys}
+        for k in image_keys + numpy_keys:
+            if k not in self.__dict__:
+                continue
+            if self.__dict__[k] is None:
+                data[k] = None
+            else:
+                data[k] = self.__dict__[k].tolist() 
+
+        if hasattr(self, "json_data") and self.json_data is not None:
+            data['json_data'] = {k: v.tolist() for k, v in self.json_data.items()}
+
+        line_as_str = json.dumps(data)
+        return line_as_str
+
+    @classmethod
+    def from_jsonline(cls, jsonline):
+        image_keys = ["next_image", "prev_image"]
+        numpy_keys = ["prev_state_image", "next_state_image", "prev_image_for_inference", "next_image_for_inference", "prev_location", "next_location"]
+        data = json.loads(jsonline)
+        for k in image_keys + numpy_keys:
+            if k not in data.keys():
+                data[k] = None 
+            if data[k] is None:
+                continue
+            data[k] = np.array(data[k], dtype=np.float)
+
+        pair = cls(prev_image = data['prev_image'],
+                   prev_location = data['prev_location'],
+                   next_image = data['next_image'],
+                   next_location = data['next_location'],
+                   resolution = data['resolution'],
+                   w = data['w'],
+                   is_row = data['is_row'],
+                   prev_image_for_inference = data.get('prev_image_for_inference',None),
+                   next_image_for_inference = data.get('next_image_for_inference', None),
+                   long_command = data.get('long_command', None))
+
+        if "json_data" in data.keys() and data['json_data'] is not None:
+            pair.json_data = {k: np.array(v) for k,v in data['json_data'].items()}
+
+        if "relation_code" in data.keys():
+            pair.relation_code = data['relation_code']
+
+        if "prev_state_image" in data.keys():
+            pair.prev_state_image = data['prev_state_image']
+            pair.next_state_image = data['next_state_image']
+
+        if "source_code" in data.keys():
+            pair.source_code = data['source_code']
+            pair.source_location = data['source_location']
+            pair.target_code = data['target_code']
+            pair.target_location = data['target_location']
+
+        return pair 
+
     def show(self):
         fig,ax = plt.subplots(1)
         ax.imshow(self.prev_image_for_inference[:,:,0:3])
@@ -646,7 +705,7 @@ def get_pairs(data_home, resolution = 224, w = 40, is_sim = False, is_row = True
         ex_act = executed_action_data[demo_idx]
         grasp = False
         if int(ex_act[0]) == 0:
-            skipped_push += 1
+            skipped_for_push += 1
             continue
         elif int(ex_act[0]) == 1:
             data = grasp_succ_data

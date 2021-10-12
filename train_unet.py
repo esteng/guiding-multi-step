@@ -376,7 +376,8 @@ def main(args):
 
     device = "cpu"
     if args.cuda is not None:
-        free_gpu_id = get_free_gpu()
+        #free_gpu_id = get_free_gpu()
+        free_gpu_id = 0
         if free_gpu_id > -1:
             device = f"cuda:{free_gpu_id}"
 

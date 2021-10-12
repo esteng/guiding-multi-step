@@ -601,12 +601,18 @@ class GoodRobotDatasetReader:
 
         if type(path_or_obj) == str:
             self.path = pathlib.Path(path_or_obj)
-            self.pkl_files = self.path.glob("*/*.pkl")
+            self.json_files = self.path.glob("*/*.jsonlines")    
             self.all_data = []
-            for pkl_file in self.pkl_files:
-                with open(pkl_file, "rb") as f1:
-                    data = pkl.load(f1)
-                    self.all_data.extend(data) 
+            for json_file in self.json_files:
+                with open(json_file) as f1:
+                    lines = f1.readlines()
+                    self.all_data += [Pair.from_jsonline(line.strip()) for line in lines]
+            #self.pkl_files = self.path.glob("*/*.pkl")
+            #self.all_data = []
+            #for pkl_file in self.pkl_files:
+            #    with open(pkl_file, "rb") as f1:
+            #        data = pkl.load(f1)
+            #        self.all_data.extend(data) 
         else:
             self.all_data = [path_or_obj]
 
