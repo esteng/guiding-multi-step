@@ -42,6 +42,10 @@ These are color-coded based on the strength of the model prediction, dark red be
 Some useful scripts are located in `grid_scripts/*` that show how to run the code. Specifically, `grid_scripts/debug_transformer.py` is a script to overfit to a tiny subset of the dev data, useful for making sure shapes line up, data is processed correctly, etc. 
 
 ## Data
+Data is available here: <TODO: LINK>
+
+Download the data, and place it into a dir called "blocks_data".
+
 All data is located in the `blocks_data/` dir. Organization is: 
 - `blocks_data/*.json`: the split in JSON format (splits are `train`, `dev`, `test`, `single` (one single trajectory), and `tiny` (small subset of dev trajectories). These are the files that are injested by `data.py`
 - `blocks_data/blocks_objs` contains the block .obj files with their corresponding mesh files 
