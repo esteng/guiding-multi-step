@@ -8,7 +8,7 @@ channels: 6
 checkpoint_dir: 
 color_pair: null
 compute_block_dist: true
-cuda: -1
+cuda: 0
 do_reconstruction: true
 dropout: 0.3
 embedder: random
@@ -27,7 +27,7 @@ next_weight: 1
 num_epochs: 200
 num_models_to_keep: 5
 overfit: false
-path: /srv/local1/estengel/gr_data_sim_small_w/
+path: blocks_data/good_robot_sim
 prev_weight: 1
 resolution: 64
 resume: false

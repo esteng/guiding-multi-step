@@ -4,7 +4,7 @@ augment_language: false
 augment_with_noise: true
 batch_size: 64
 channels: 6
-checkpoint_dir: /srv/local1/estengel/models/gr_rows_repl
+checkpoint_dir: 
 color_pair: None
 cuda: -1
 do_reconstruction: true
@@ -35,7 +35,7 @@ num_models_to_keep: 5
 output_type: per-patch
 overfit: false
 patch_size: 4
-path: /srv/local1/estengel/gr_data_sim_small_w/
+path: blocks_data/good_robot_sim
 pos_encoding_type: fixed-separate
 pretrained_weights: null
 prev_weight: 1.0

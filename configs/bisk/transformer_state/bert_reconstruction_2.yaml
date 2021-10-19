@@ -1,7 +1,7 @@
 batch_size: 18
 binarize_blocks: true
 channels: 21
-checkpoint_dir: /srv/local1/estengel/models/transformer_small_patch/bert_reconstruction
+checkpoint_dir: 
 cuda: 0
 do_filter: true
 do_one_hot: true
@@ -42,8 +42,8 @@ seed: 12
 test: false
 test_path: null
 top_only: true
-train_path: blocks_data/trainset_v2.json
+train_path: blocks_data/bisk_data_original/trainset_v2.json
 traj_type: flat
-val_path: blocks_data/devset.json
+val_path: blocks_data/bisk_data_original/devset.json
 warmup: 1000
 zero_weight: 0.2

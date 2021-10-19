@@ -652,7 +652,7 @@ def get_pairs(data_home, resolution = 224, w = 40, is_sim = False, is_row = True
     grasp_succ_data = np.loadtxt(grasp_successes_path, **kwargs)
 
     if long_command:
-        # TODO elias: use json data to get final block order 
+        # elias: use json data to get final block order 
         clearance_data = np.loadtxt(clearance_path, **kwargs).astype(int)
         stack_height_data = np.loadtxt(stack_height_path, **kwargs).astype(int)
         color_sequences = {}
